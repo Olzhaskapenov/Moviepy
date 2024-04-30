@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>Video Renderer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function checkProgress() {
+            $.get("/progress", function(data) {
+                $("#progress").text(data.progress + "%");
+
+                // Проверка, не завершен ли рендеринг
+                if (data.progress >= 100) {
+                    $("#download-link").show();  //Показываем ссылку на скачивание
+                } else {
+                    setTimeout(checkProgress, 1000);  //Проверка каждую секунду
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Video Renderer</h1>
+    <form action="/generate_video" method="post" enctype="multipart/form-data">
+        <label for="team1_image">Team Image:</label>
+        <input type="file" id="team1_image" name="team1_image"><br>
+
+        <label for="date">Date:</label>
+        <input type="text" id="date" name="date"><br>
+
+        <label for="time">Time:</label>
+        <input type="text" id="time" name="time"><br>
+
+        <label for="bottom_text">Bottom Text:</label>
+        <input type="text" id="bottom_text" name="bottom_text"><br>
+
+        <label for="button_text">Button Text:</label>
+        <input type="text" id="button_text" name="button_text"><br>
+
+        <input type="submit" value="Generate Video" onclick="setTimeout(checkProgress, 1000)">
+    </form>
+
+    <div id="progress"></div>
+
+    <a id="download-link" href="/download_video" style="display: none;">Download the final video</a>
+</body>
+</html>
